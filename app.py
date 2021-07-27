@@ -12,8 +12,10 @@ from resources.item import Item, ItemList
 from resources.stores import Store, StoreList
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
+uri = os.getenv("DATABASE_URL")  # or other relevant config var
+if uri.startswith("postgres://"):
+    uri = uri.replace("postgres://", "postgresql://", 1)
+app.config['SQLALCHEMY_DATABASE_URI'] = ('uri', 'sqlite:///data.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = 'olya'
 api = Api(app)
